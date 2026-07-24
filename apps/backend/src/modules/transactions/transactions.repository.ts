@@ -7,6 +7,8 @@ export interface TransactionFilters {
   dateTo?: string;
   type?: TransactionType;
   categoryId?: string;
+  page?: number;
+  limit?: number;
 }
 
 @Injectable()
@@ -18,19 +20,30 @@ export class TransactionsRepository {
   }
 
   findAllByUser(userId: string, filters: TransactionFilters): Promise<Transaction[]> {
-    const { dateFrom, dateTo, type, categoryId } = filters;
+    const { page = 1, limit = 10 } = filters;
     return this.prisma.transaction.findMany({
-      where: {
-        userId,
-        type,
-        categoryId,
-        date: {
-          gte: dateFrom ? new Date(dateFrom) : undefined,
-          lte: dateTo ? new Date(dateTo) : undefined,
-        },
-      },
+      where: this.buildWhere(userId, filters),
       orderBy: { date: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+  }
+
+  countByUser(userId: string, filters: TransactionFilters): Promise<number> {
+    return this.prisma.transaction.count({ where: this.buildWhere(userId, filters) });
+  }
+
+  private buildWhere(userId: string, filters: TransactionFilters): Prisma.TransactionWhereInput {
+    const { dateFrom, dateTo, type, categoryId } = filters;
+    return {
+      userId,
+      type,
+      categoryId,
+      date: {
+        gte: dateFrom ? new Date(dateFrom) : undefined,
+        lte: dateTo ? new Date(dateTo) : undefined,
+      },
+    };
   }
 
   findById(id: string): Promise<Transaction | null> {

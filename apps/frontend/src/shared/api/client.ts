@@ -16,7 +16,7 @@ type RequestOptions = {
 };
 
 async function request<TResponse>(
-  method: "GET" | "POST",
+  method: "GET" | "POST" | "PATCH" | "DELETE",
   path: string,
   { body, token }: RequestOptions = {},
 ): Promise<TResponse> {
@@ -45,4 +45,6 @@ async function request<TResponse>(
 export const apiClient = {
   get: <TResponse>(path: string, options?: RequestOptions) => request<TResponse>("GET", path, options),
   post: <TResponse>(path: string, options?: RequestOptions) => request<TResponse>("POST", path, options),
+  patch: <TResponse>(path: string, options?: RequestOptions) => request<TResponse>("PATCH", path, options),
+  delete: <TResponse>(path: string, options?: RequestOptions) => request<TResponse>("DELETE", path, options),
 };

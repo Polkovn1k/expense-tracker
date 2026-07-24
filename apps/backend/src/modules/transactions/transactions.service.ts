@@ -1,10 +1,14 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { TransactionType } from "@prisma/client";
+import { Transaction, TransactionType } from "@prisma/client";
 import { CategoriesRepository } from "../categories/categories.repository";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { QueryTransactionsDto } from "./dto/query-transactions.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { TransactionsRepository } from "./transactions.repository";
+
+function toApiTransaction(transaction: Transaction) {
+  return { ...transaction, amount: Number(transaction.amount) };
+}
 
 @Injectable()
 export class TransactionsService {
@@ -15,7 +19,7 @@ export class TransactionsService {
 
   async create(userId: string, dto: CreateTransactionDto) {
     await this.getOwnedCategoryOrThrow(userId, dto.categoryId);
-    return this.transactionsRepository.create({
+    const transaction = await this.transactionsRepository.create({
       amount: dto.amount,
       type: dto.type,
       description: dto.description,
@@ -23,14 +27,26 @@ export class TransactionsService {
       user: { connect: { id: userId } },
       category: { connect: { id: dto.categoryId } },
     });
+    return toApiTransaction(transaction);
   }
 
-  findAll(userId: string, query: QueryTransactionsDto) {
-    return this.transactionsRepository.findAllByUser(userId, query);
+  async findAll(userId: string, query: QueryTransactionsDto) {
+    const page = query.page ?? 1;
+    const pageSize = query.limit ?? 10;
+    const [data, total] = await Promise.all([
+      this.transactionsRepository.findAllByUser(userId, query),
+      this.transactionsRepository.countByUser(userId, query),
+    ]);
+    return {
+      data: data.map(toApiTransaction),
+      total,
+      page,
+      pageSize,
+    };
   }
 
   async findOne(userId: string, id: string) {
-    return this.getOwnedOrThrow(userId, id);
+    return toApiTransaction(await this.getOwnedOrThrow(userId, id));
   }
 
   async update(userId: string, id: string, dto: UpdateTransactionDto) {
@@ -38,18 +54,20 @@ export class TransactionsService {
     if (dto.categoryId) {
       await this.getOwnedCategoryOrThrow(userId, dto.categoryId);
     }
-    return this.transactionsRepository.update(id, {
+    const transaction = await this.transactionsRepository.update(id, {
       amount: dto.amount,
       type: dto.type,
       description: dto.description,
       date: dto.date ? new Date(dto.date) : undefined,
       category: dto.categoryId ? { connect: { id: dto.categoryId } } : undefined,
     });
+    return toApiTransaction(transaction);
   }
 
   async remove(userId: string, id: string) {
     const transaction = await this.getOwnedOrThrow(userId, id);
-    return this.transactionsRepository.delete(transaction.id);
+    const deleted = await this.transactionsRepository.delete(transaction.id);
+    return toApiTransaction(deleted);
   }
 
   async summary(userId: string, month: number, year: number) {

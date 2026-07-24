@@ -77,7 +77,37 @@ If step 3 fails with `EADDRINUSE` on port 3001, a backend instance from a previo
 
 ## Commit conventions
 
-This repo follows [Conventional Commits](https://www.conventionalcommits.org/). Format: `<type>[optional scope]: <description>`, e.g. `feat(auth): add JWT refresh endpoint`, `fix(frontend): forwardRef missing on Input`. Common types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `build`, `ci`. A `!` after the type/scope (or a `BREAKING CHANGE:` footer) marks a breaking change.
+This repo follows [Conventional Commits](https://www.conventionalcommits.org/). Format: `<type>[optional scope]: <description>`, e.g. `feat(auth): добавить обновление JWT`, `fix(frontend): починить forwardRef в Input`. Common types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `build`, `ci`. A `!` after the type/scope (or a `BREAKING CHANGE:` footer) marks a breaking change.
+
+**Language:** `<type>[scope]` stays in English (standard Conventional Commits keywords), but the `<description>` and commit body must be written in Russian.
+
+## Branching: GitHub Flow
+
+This repo uses [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow): `main` is always deployable. Work happens on short-lived feature branches, merged back via pull request.
+
+- Branch naming: `feature/<area>-<short-name>`, e.g. `feature/frontend-main-page`, `feature/backend-expenses-api`. Use `fix/<short-name>` for bug fixes.
+- Branch off `main`; commit using [Conventional Commits](#commit-conventions) as you go.
+- Open a PR against `main` when ready for review/merge; don't commit directly to `main`.
+- Delete the feature branch after it's merged.
+
+### Opening a pull request
+
+Before opening a PR, summarize what the branch actually changed relative to `main` and use that as the PR body — don't just repeat commit messages.
+
+```bash
+git log --oneline main..HEAD      # commits included in the PR
+git diff --stat main...HEAD       # files touched, at a glance
+```
+
+Turn that into a short summary (2-5 bullets: what changed and why, not a file-by-file listing), then open the PR. **The PR title's `<description>` and the entire body (Summary, Test plan) must be written in Russian** — same rule as commit messages:
+
+```bash
+gh pr create --title "<type>[scope]: <краткое описание>" --body "## Summary
+- ...
+
+## Test plan
+- ..."
+```
 
 ## Frontend architecture: Feature-Sliced Design
 

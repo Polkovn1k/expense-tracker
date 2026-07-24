@@ -30,7 +30,7 @@ export function useLoginForm() {
     try {
       const { accessToken, user } = await login(values);
       saveSession({ accessToken, user });
-      router.push("/");
+      router.push("/transactions");
       router.refresh();
     } catch (error) {
       setSubmitError(
