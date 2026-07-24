@@ -35,7 +35,7 @@ export function useRegisterForm() {
       const { agreeToTerms: _agreeToTerms, ...dto } = values;
       const { accessToken, user } = await registerRequest(dto);
       saveSession({ accessToken, user });
-      router.push("/");
+      router.push("/transactions");
       router.refresh();
     } catch (error) {
       setSubmitError(
