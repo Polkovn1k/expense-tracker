@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls *)",
+      "Bash(pnpm --version)",
+      "Bash(wsl.exe *)",
+      "Bash(wslpath -u '\\\\\\\\\\\\\\\\wsl.localhost\\\\Ubuntu-20.04\\\\home\\\\polkovn1k\\\\projects\\\\ai-projects\\\\test-1')"
+    ]
+  }
+}
