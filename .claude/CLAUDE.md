@@ -79,6 +79,15 @@ If step 3 fails with `EADDRINUSE` on port 3001, a backend instance from a previo
 
 This repo follows [Conventional Commits](https://www.conventionalcommits.org/). Format: `<type>[optional scope]: <description>`, e.g. `feat(auth): add JWT refresh endpoint`, `fix(frontend): forwardRef missing on Input`. Common types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `build`, `ci`. A `!` after the type/scope (or a `BREAKING CHANGE:` footer) marks a breaking change.
 
+## Branching: GitHub Flow
+
+This repo uses [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow): `main` is always deployable. Work happens on short-lived feature branches, merged back via pull request.
+
+- Branch naming: `feature/<area>-<short-name>`, e.g. `feature/frontend-main-page`, `feature/backend-expenses-api`. Use `fix/<short-name>` for bug fixes.
+- Branch off `main`; commit using [Conventional Commits](#commit-conventions) as you go.
+- Open a PR against `main` when ready for review/merge; don't commit directly to `main`.
+- Delete the feature branch after it's merged.
+
 ## Frontend architecture: Feature-Sliced Design
 
 `apps/frontend/src` follows FSD. Next.js's App Router (`src/app`) is used only for routing — pages stay thin and import UI from lower layers. Import direction is one-way: `app` → `features` → `entities` → `shared` (a layer may only import from layers below it).
