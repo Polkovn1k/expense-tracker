@@ -88,6 +88,25 @@ This repo uses [GitHub Flow](https://docs.github.com/en/get-started/using-github
 - Open a PR against `main` when ready for review/merge; don't commit directly to `main`.
 - Delete the feature branch after it's merged.
 
+### Opening a pull request
+
+Before opening a PR, summarize what the branch actually changed relative to `main` and use that as the PR body — don't just repeat commit messages.
+
+```bash
+git log --oneline main..HEAD      # commits included in the PR
+git diff --stat main...HEAD       # files touched, at a glance
+```
+
+Turn that into a short summary (2-5 bullets: what changed and why, not a file-by-file listing), then open the PR:
+
+```bash
+gh pr create --title "<type>[scope]: <short description>" --body "## Summary
+- ...
+
+## Test plan
+- ..."
+```
+
 ## Frontend architecture: Feature-Sliced Design
 
 `apps/frontend/src` follows FSD. Next.js's App Router (`src/app`) is used only for routing — pages stay thin and import UI from lower layers. Import direction is one-way: `app` → `features` → `entities` → `shared` (a layer may only import from layers below it).
