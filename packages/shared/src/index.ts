@@ -2,6 +2,7 @@ export * from "./types/expense.ts";
 export * from "./types/category.ts";
 export * from "./types/user.ts";
 export * from "./types/transaction.ts";
+export * from "./types/pagination.ts";
 export * from "./dto/create-expense.dto.ts";
 export * from "./dto/update-expense.dto.ts";
 export * from "./dto/create-category.dto.ts";
