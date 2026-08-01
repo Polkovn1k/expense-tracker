@@ -12,5 +12,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  dbhub:
+    image: bytebase/dbhub:latest
+    container_name: expense-tracker-dbhub
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    command:
+      - --transport
+      - http
+      - --port
+      - "8080"
+      - --dsn
+      - "postgres://expense_tracker:expense_tracker@postgres:5432/expense_tracker?sslmode=disable"
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:

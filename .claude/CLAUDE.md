@@ -74,6 +74,7 @@ If step 3 fails with `EADDRINUSE` on port 3001, a backend instance from a previo
 -   **Backend consumes Prisma directly**: the Prisma schema lives under `apps/backend/prisma/schema.prisma`, scoped to the backend app, not shared.
 -   **Backend CORS**: `apps/backend/src/main.ts` calls `app.enableCors({ origin: process.env.CORS_ORIGIN ?? "http://localhost:3000" })` so the frontend (port 3000) can call the API (port 3001) from the browser. Set `CORS_ORIGIN` in `apps/backend/.env` for non-default setups.
 -   **TypeScript configs form a hierarchy**: `tsconfig.base.json` at the repo root holds shared compiler options; each package/app's `tsconfig.json` extends it and overrides only what differs (e.g. backend uses CommonJS + decorators for NestJS, frontend uses bundler resolution + JSX preserve for Next.js).
+-   **Swagger docs must stay in sync with the backend API**: the backend has `@nestjs/swagger` wired up (`apps/backend/src/main.ts`, served at `/api/docs`). Every controller endpoint uses `@ApiTags`/`@ApiBearerAuth`/`@ApiOperation`/`@ApiResponse`/`@ApiParam`, and every DTO field uses `@ApiProperty`/`@ApiPropertyOptional`. Whenever you add, remove, or change a backend endpoint or DTO (new route, changed params/body/response shape, new status code), update the corresponding Swagger decorators in the same change — don't let the docs drift from the code.
 
 ## Commit conventions
 

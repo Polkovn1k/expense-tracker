@@ -4,7 +4,15 @@
       "Bash(ls *)",
       "Bash(pnpm --version)",
       "Bash(wsl.exe *)",
-      "Bash(wslpath -u '\\\\\\\\\\\\\\\\wsl.localhost\\\\Ubuntu-20.04\\\\home\\\\polkovn1k\\\\projects\\\\ai-projects\\\\test-1')"
+      "Bash(wslpath -u '\\\\\\\\\\\\\\\\wsl.localhost\\\\Ubuntu-20.04\\\\home\\\\polkovn1k\\\\projects\\\\ai-projects\\\\test-1')",
+      "Read(//home/polkovn1k/.claude/**)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "dbhub"
+  ],
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  },
+  "enableAllProjectMcpServers": true
 }
